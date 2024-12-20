@@ -1,0 +1,1510 @@
+{
+  "name": "projects/511582533367/locations/us-west1/integrations/@@INTEGRATION_NAME@@/versions/532d3707-c5e5-4eca-88dd-d8a1138fc015",
+  "description": "Counts Proxy deployment units for a specific set of Apigee organizations.",
+  "updateTime": "2024-12-20T07:46:52.742Z",
+  "createTime": "2024-12-20T07:44:39.994Z",
+  "lastModifierEmail": "admin@dchiesa.altostrat.com",
+  "triggerConfigs": [
+    {
+      "label": "Query Organization",
+      "startTasks": [
+        {
+          "taskId": "2"
+        }
+      ],
+      "properties": {
+        "Trigger name": "@@INTEGRATION_NAME@@-one-org"
+      },
+      "triggerType": "PRIVATE_TRIGGER",
+      "triggerNumber": "8",
+      "triggerId": "private_trigger/@@INTEGRATION_NAME@@-one-org",
+      "position": {
+        "x": -336
+      }
+    },
+    {
+      "label": "Query Environment",
+      "startTasks": [
+        {
+          "taskId": "5"
+        }
+      ],
+      "properties": {
+        "Trigger name": "@@INTEGRATION_NAME@@-one-env"
+      },
+      "triggerType": "PRIVATE_TRIGGER",
+      "triggerNumber": "5",
+      "triggerId": "private_trigger/@@INTEGRATION_NAME@@-one-env",
+      "position": {
+        "x": -588
+      }
+    },
+    {
+      "label": "Query instance",
+      "startTasks": [
+        {
+          "taskId": "28"
+        }
+      ],
+      "properties": {
+        "Trigger name": "@@INTEGRATION_NAME@@-instance"
+      },
+      "triggerType": "PRIVATE_TRIGGER",
+      "triggerNumber": "9",
+      "triggerId": "private_trigger/@@INTEGRATION_NAME@@-instance",
+      "position": {
+        "x": -840
+      }
+    },
+    {
+      "label": "Schedule Trigger",
+      "startTasks": [
+        {
+          "taskId": "32"
+        }
+      ],
+      "properties": {
+        "Scheduled Time spec": "51 21 * * *",
+        "Timer Name": "@@INTEGRATION_NAME@@er_Timer_1"
+      },
+      "triggerType": "CRON",
+      "triggerNumber": "1",
+      "triggerId": "cron_trigger/@@INTEGRATION_NAME@@er_Timer_1/51+21+*+*+*",
+      "position": {
+        "x": -1092
+      }
+    }
+  ],
+  "taskConfigs": [
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "1",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_1_responseBody`$"]
+            }
+          }
+        },
+        "authConfigName": {
+          "key": "authConfigName",
+          "value": {
+            "stringValue": "@@AUTH_CONFIG@@"
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "httpParams": {
+          "key": "httpParams",
+          "value": {}
+        },
+        "authConfig": {
+          "key": "authConfig",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_1_responseHeader`$"]
+            }
+          }
+        },
+        "userAgent": {
+          "key": "userAgent",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_1_responseStatus`$"]
+            }
+          }
+        },
+        "timeout": {
+          "key": "timeout",
+          "value": {
+            "intValue": "0"
+          }
+        },
+        "url": {
+          "key": "url",
+          "value": {
+            "stringValue": "$apigeeEnvironmentsUri$"
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "requestorId": {
+          "key": "requestorId",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "urlQueryStrings": {
+          "key": "urlQueryStrings",
+          "value": {}
+        },
+        "jsonAdditionalHeaders": {
+          "key": "jsonAdditionalHeaders",
+          "value": {
+            "jsonValue": "null"
+          }
+        },
+        "requestBody": {
+          "key": "requestBody",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "additionalHeaders": {
+          "key": "additionalHeaders",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "4"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Retrieve Environments",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -210,
+        "y": 252
+      }
+    },
+    {
+      "task": "FieldMappingTask",
+      "taskId": "2",
+      "parameters": {
+        "FieldMappingConfigTaskParameterKey": {
+          "key": "FieldMappingConfigTaskParameterKey",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"literalValue\": {\n            \"stringValue\": \"https://apigee.googleapis.com/v1/organizations/\"\n          }\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$orgName$\"\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$apigeeOrgBaseUri$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }, {\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$apigeeOrgBaseUri$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/environments\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$apigeeEnvironmentsUri$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }, {\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$apigeeOrgBaseUri$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/instances\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$apigeeInstancesUri$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "1"
+        },
+        {
+          "taskId": "25"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Produce initial URIs",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -336,
+        "y": 126
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "25",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_25_responseBody`$"]
+            }
+          }
+        },
+        "authConfigName": {
+          "key": "authConfigName",
+          "value": {
+            "stringValue": "@@AUTH_CONFIG@@"
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "httpParams": {
+          "key": "httpParams",
+          "value": {}
+        },
+        "authConfig": {
+          "key": "authConfig",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_25_responseHeader`$"]
+            }
+          }
+        },
+        "userAgent": {
+          "key": "userAgent",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_25_responseStatus`$"]
+            }
+          }
+        },
+        "timeout": {
+          "key": "timeout",
+          "value": {
+            "intValue": "0"
+          }
+        },
+        "url": {
+          "key": "url",
+          "value": {
+            "stringValue": "$apigeeInstancesUri$"
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "requestorId": {
+          "key": "requestorId",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "urlQueryStrings": {
+          "key": "urlQueryStrings",
+          "value": {}
+        },
+        "jsonAdditionalHeaders": {
+          "key": "jsonAdditionalHeaders",
+          "value": {
+            "jsonValue": "null"
+          }
+        },
+        "requestBody": {
+          "key": "requestBody",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "additionalHeaders": {
+          "key": "additionalHeaders",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "26"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Retrieve Instances",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -462,
+        "y": 252
+      }
+    },
+    {
+      "task": "JsonnetMapperTask",
+      "taskId": "26",
+      "parameters": {
+        "template": {
+          "key": "template",
+          "value": {
+            "stringValue": "{\n    instanceList: [x.name for x in std.parseJson(std.extVar(\"`Task_25_responseBody`\")).instances]\n}"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "27"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "extract instance names",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -462,
+        "y": 378
+      }
+    },
+    {
+      "task": "SubWorkflowForEachLoopV2Task",
+      "taskId": "27",
+      "parameters": {
+        "iterationElementMapping": {
+          "key": "iterationElementMapping",
+          "value": {
+            "stringValue": "instanceName"
+          }
+        },
+        "aggregatorParameterMapping": {
+          "key": "aggregatorParameterMapping",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"mappings\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"aggregatedMappings\"\n      }\n    }\n  }]\n}"
+          }
+        },
+        "triggerId": {
+          "key": "triggerId",
+          "value": {
+            "stringValue": "private_trigger/@@INTEGRATION_NAME@@-instance"
+          }
+        },
+        "loopMetadata": {
+          "key": "loopMetadata",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_27_loopMetadata`$"]
+            }
+          }
+        },
+        "disableEucPropagation": {
+          "key": "disableEucPropagation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "listToIterate": {
+          "key": "listToIterate",
+          "value": {
+            "stringValue": "$instanceList$"
+          }
+        },
+        "workflowName": {
+          "key": "workflowName",
+          "value": {
+            "stringValue": "@@INTEGRATION_NAME@@"
+          }
+        },
+        "requestParameterMapping": {
+          "key": "requestParameterMapping",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"apigeeInstancesUri\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"apigeeInstancesUri\"\n      }\n    }\n  }]\n}"
+          }
+        },
+        "overrideParameterMapping": {
+          "key": "overrideParameterMapping",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "35"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "For Each Instance",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -588,
+        "y": 504
+      }
+    },
+    {
+      "task": "FieldMappingTask",
+      "taskId": "28",
+      "parameters": {
+        "FieldMappingConfigTaskParameterKey": {
+          "key": "FieldMappingConfigTaskParameterKey",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$apigeeInstancesUri$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/\"\n              }\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$instanceName$\"\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/attachments\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$attachmentsUri$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "29"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Produce URI for one instance",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -840,
+        "y": 126
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "29",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_29_responseBody`$"]
+            }
+          }
+        },
+        "authConfigName": {
+          "key": "authConfigName",
+          "value": {
+            "stringValue": "@@AUTH_CONFIG@@"
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "httpParams": {
+          "key": "httpParams",
+          "value": {}
+        },
+        "authConfig": {
+          "key": "authConfig",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_29_responseHeader`$"]
+            }
+          }
+        },
+        "userAgent": {
+          "key": "userAgent",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_29_responseStatus`$"]
+            }
+          }
+        },
+        "timeout": {
+          "key": "timeout",
+          "value": {
+            "intValue": "0"
+          }
+        },
+        "url": {
+          "key": "url",
+          "value": {
+            "stringValue": "$attachmentsUri$"
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "requestorId": {
+          "key": "requestorId",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "urlQueryStrings": {
+          "key": "urlQueryStrings",
+          "value": {}
+        },
+        "jsonAdditionalHeaders": {
+          "key": "jsonAdditionalHeaders",
+          "value": {
+            "jsonValue": "null"
+          }
+        },
+        "requestBody": {
+          "key": "requestBody",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "additionalHeaders": {
+          "key": "additionalHeaders",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "30"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Get Instance Attachments",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -966,
+        "y": 252
+      }
+    },
+    {
+      "task": "SubWorkflowForEachLoopV2Task",
+      "taskId": "3",
+      "parameters": {
+        "iterationElementMapping": {
+          "key": "iterationElementMapping",
+          "value": {
+            "stringValue": "environmentName"
+          }
+        },
+        "aggregatorParameterMapping": {
+          "key": "aggregatorParameterMapping",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"deployments\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"deploymentCounts\"\n      }\n    }\n  }]\n}"
+          }
+        },
+        "triggerId": {
+          "key": "triggerId",
+          "value": {
+            "stringValue": "private_trigger/@@INTEGRATION_NAME@@-one-env"
+          }
+        },
+        "loopMetadata": {
+          "key": "loopMetadata",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_3_loopMetadata`$"]
+            }
+          }
+        },
+        "disableEucPropagation": {
+          "key": "disableEucPropagation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "listToIterate": {
+          "key": "listToIterate",
+          "value": {
+            "stringValue": "$environmentsList$"
+          }
+        },
+        "workflowName": {
+          "key": "workflowName",
+          "value": {
+            "stringValue": "@@INTEGRATION_NAME@@"
+          }
+        },
+        "requestParameterMapping": {
+          "key": "requestParameterMapping",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"apigeeEnvironmentsUri\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"apigeeEnvironmentsUri\"\n      }\n    }\n  }, {\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"orgName\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"orgName\"\n      }\n    }\n  }]\n}"
+          }
+        },
+        "overrideParameterMapping": {
+          "key": "overrideParameterMapping",
+          "value": {}
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "For Each environment",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -714,
+        "y": 756
+      }
+    },
+    {
+      "task": "JsonnetMapperTask",
+      "taskId": "30",
+      "parameters": {
+        "template": {
+          "key": "template",
+          "value": {
+            "stringValue": "local instanceName \u003d std.extVar(\u0027instanceName\u0027);\nlocal attachments \u003d std.parseJson(std.extVar(\"`Task_29_responseBody`\")).attachments;\n\n{\n  mappings: {\n    [x.environment]: instanceName\n    for x in attachments\n  }\n}\n\n\n"
+          }
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Figure mapping of environments to instances",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -966,
+        "y": 378
+      }
+    },
+    {
+      "task": "JsonnetMapperTask",
+      "taskId": "32",
+      "parameters": {
+        "template": {
+          "key": "template",
+          "value": {
+            "stringValue": "{ \n    orgList: [std.stripChars(x,\u0027 \u0027) for x in std.split(std.extVar(\"`CONFIG_organizationList`\"), \",\")]\n}"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "33"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Split org list",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -1092,
+        "y": 126
+      }
+    },
+    {
+      "task": "SubWorkflowForEachLoopV2Task",
+      "taskId": "33",
+      "parameters": {
+        "iterationElementMapping": {
+          "key": "iterationElementMapping",
+          "value": {
+            "stringValue": "orgName"
+          }
+        },
+        "aggregatorParameterMapping": {
+          "key": "aggregatorParameterMapping",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.ParameterMap\",\n  \"entries\": [{\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"deploymentCounts\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"aggregatedDeploymentCounts\"\n      }\n    }\n  }, {\n    \"key\": {\n      \"literalValue\": {\n        \"stringValue\": \"environmentToInstanceMappings\"\n      }\n    },\n    \"value\": {\n      \"literalValue\": {\n        \"stringValue\": \"aggregatedEnvironmentToInstanceMappings\"\n      }\n    }\n  }]\n}"
+          }
+        },
+        "triggerId": {
+          "key": "triggerId",
+          "value": {
+            "stringValue": "private_trigger/@@INTEGRATION_NAME@@-one-org"
+          }
+        },
+        "loopMetadata": {
+          "key": "loopMetadata",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_33_loopMetadata`$"]
+            }
+          }
+        },
+        "disableEucPropagation": {
+          "key": "disableEucPropagation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "listToIterate": {
+          "key": "listToIterate",
+          "value": {
+            "stringValue": "$orgList$"
+          }
+        },
+        "workflowName": {
+          "key": "workflowName",
+          "value": {
+            "stringValue": "@@INTEGRATION_NAME@@"
+          }
+        },
+        "requestParameterMapping": {
+          "key": "requestParameterMapping"
+        },
+        "overrideParameterMapping": {
+          "key": "overrideParameterMapping",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "38"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "For Each org",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -1218,
+        "y": 252
+      }
+    },
+    {
+      "task": "JsonnetMapperTask",
+      "taskId": "35",
+      "parameters": {
+        "template": {
+          "key": "template",
+          "value": {
+            "stringValue": "local agg \u003d std.extVar(\u0027aggregatedMappings\u0027);\nlocal orgName \u003d std.extVar(\u0027orgName\u0027);\nlocal envs \u003d std.uniq(std.sort(std.flattenArrays(\n  [std.objectFields(a) for a in agg])));\n\nlocal temp \u003d {\n    [e]: (\n      [( if std.objectHas(m, e) then m[e] )\n        for m in agg]\n    )\n    for e in envs\n};\n\nlocal notNull(x)\u003d x !\u003d null;\n\n// filter the nulls out of the inner lists \n{\n  environmentToInstanceMappings: {\n      [orgName + \u0027/\u0027 +  e]: std.filter(notNull,temp[e])\n        for e in envs\n  }\n}\n"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "3"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Map Environments to Instances",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -714,
+        "y": 630
+      }
+    },
+    {
+      "task": "EmailTask",
+      "taskId": "36",
+      "parameters": {
+        "Cc": {
+          "key": "Cc",
+          "value": {
+            "stringArray": {}
+          }
+        },
+        "TextBody": {
+          "key": "TextBody",
+          "value": {
+            "stringValue": "\u003chtml\u003e\n  \u003chead\u003e\n    \u003cstyle\u003e\n     #innerBody \u003e table {\n       border-spacing: 0px;\n       border-collapse: separate;\n       border: 1px solid black;\n     }\n     #innerBody \u003e table tr th, #innerBody \u003e table tr td {\n       border: 1px solid #242424;\n       padding: 2px 2px;\n     }\n     #innerBody \u003e table tr th {\n       color:#$tableHeaderFg$;\n       background-color:#$tableHeaderBg$;\n     }\n     #innerBody \u003e table tr td {\n       color: black;\n       background-color: #ffffff;\n     }\n    \u003c/style\u003e\n  \u003c/head\u003e\n\n  \u003cbody\u003e\n    \u003cdiv id\u003d\u0027innerBody\u0027\u003e\n    \u003ch3\u003ePDU Report\u003c/h3\u003e\n    \u003ctable\u003e\n      \u003ctbody\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003eexecution time\u003c/th\u003e\n          \u003ctd\u003e$now$\u003c/td\u003e\n        \u003c/tr\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003eorganizations scanned\u003c/th\u003e\n          \u003ctd\u003e$orgList$\u003c/td\u003e\n        \u003c/tr\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003eTotal PDUs\u003c/th\u003e\n          \u003ctd\u003e$totalCount$\u003c/td\u003e\n        \u003c/tr\u003e\n      \u003c/tbody\u003e\n    \u003c/table\u003e\n\n    \u003ch4\u003eDiagnostics\u003c/h4\u003e\n    \u003ctable\u003e\n      \u003ctbody\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003eintegration name\u003c/th\u003e\n          \u003ctd\u003e$`IntegrationName`$\u003c/td\u003e\n        \u003c/tr\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003eGCP project\u003c/th\u003e\n          \u003ctd\u003e$`ProjectId`$\u003c/td\u003e\n        \u003c/tr\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003emappings\u003c/th\u003e\n          \u003ctd\u003e$reformedEnvironmentToInstanceMappings$\u003c/td\u003e\n        \u003c/tr\u003e\n        \u003ctr\u003e\n          \u003cth align\u003d\u0027left\u0027\u003ecounts\u003c/th\u003e\n          \u003ctd\u003e$flattenedDeploymentCounts$\u003c/td\u003e\n        \u003c/tr\u003e\n      \u003c/tbody\u003e\n    \u003c/table\u003e\n    \u003c/div\u003e\n  \u003c/body\u003e\n\u003c/html\u003e"
+          }
+        },
+        "Bcc": {
+          "key": "Bcc",
+          "value": {
+            "stringArray": {}
+          }
+        },
+        "AttachmentPath": {
+          "key": "AttachmentPath",
+          "value": {
+            "stringArray": {}
+          }
+        },
+        "ThrowNoRequiredInputException": {
+          "key": "ThrowNoRequiredInputException",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "To": {
+          "key": "To",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$emailAddress$"]
+            }
+          }
+        },
+        "BodyFormat": {
+          "key": "BodyFormat",
+          "value": {
+            "stringValue": "html"
+          }
+        },
+        "EmailConfigInput": {
+          "key": "EmailConfigInput",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.EmailConfig\"\n}"
+          }
+        },
+        "Subject": {
+          "key": "Subject",
+          "value": {
+            "stringValue": "Results of Apigee PDU scan for organizations: $orgList$"
+          }
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Send Email Report",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -840,
+        "y": 504
+      }
+    },
+    {
+      "task": "JsonnetMapperTask",
+      "taskId": "37",
+      "parameters": {
+        "template": {
+          "key": "template",
+          "value": {
+            "stringValue": "\n// Import the additional functions library\nlocal deployments \u003d std.parseJson(std.extVar(\"`Task_6_responseBody`\")).deployments;\nlocal orgName \u003d std.extVar(\u0027orgName\u0027);\nlocal envs \u003d std.uniq(std.sort(\n  [(d.environment) for d in deployments]));\n\nlocal envFilter(env) \u003d function(v) v.environment \u003d\u003d env;\n\n{\n  //out: envs,\n  deployments: {\n    [orgName + \u0027/\u0027 + e]: std.length(std.filter(envFilter(e), deployments))\n     for e in envs\n  }\n}"
+          }
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Compute Deployments per env",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -714,
+        "y": 378
+      }
+    },
+    {
+      "task": "JavaScriptTask",
+      "taskId": "38",
+      "parameters": {
+        "script": {
+          "key": "script",
+          "value": {
+            "stringValue": "\n// the data looks like this: \n\n// environmentToInstanceMappings \u003d {\n//   \"org1/prod\": [\"instance2\"],\n//   \"org1/test-env\": [\"instance1\", \"instance2\"],\n//   \"org2/eval\": [\"instance3\"],\n// };\n// \n\n// deploymentCounts \u003d [\n//   [\n//     {\n//       \"org1/prod\": 1,\n//     },\n//     {\n//       \"org1/test-env\": 6,\n//     },\n//   ],\n//   [\n//     {\n//       \"org2/eval\": 43,\n//     },\n//   ],\n// ];\n\nfunction flatten(arr) {\n  return arr.reduce(function (flat, toFlatten) {\n    return flat.concat(\n      Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten,\n    );\n  });\n}\n\nfunction executeScript(event) {\n var environmentToInstanceMappings\u003d event.getParameter(\"aggregatedEnvironmentToInstanceMappings\");\n var deploymentCounts \u003d event.getParameter(\u0027aggregatedDeploymentCounts\u0027);\n  var reducer \u003d function (a1, c1) {\n    var environments \u003d Object.keys(c1);\n    var r2 \u003d function (a2, envName) {\n      return (\n        a2 +\n        (c1[envName]\n          ? c1[envName] * environmentToInstanceMappings[envName].length\n          : 999)\n      );\n    };\n    return a1 + environments.reduce(r2, 0);\n  };\n\n  environmentToInstanceMappings \u003d environmentToInstanceMappings.reduce(function(acc, obj) {\n    return Object.assign(acc, obj);\n  }, {});  \n  event.setParameter(\"reformedEnvironmentToInstanceMappings\", JSON.stringify(environmentToInstanceMappings,null,2));\n\n  deploymentCounts\u003d flatten(deploymentCounts);\n  event.setParameter(\"flattenedDeploymentCounts\", JSON.stringify(deploymentCounts,null,2));\n    \n  event.setParameter(\"totalCount\",\n                      deploymentCounts.reduce(reducer, 0).toFixed(0));\n  event.setParameter(\"now\", (new Date()).toISOString()) ;\n\n  // copy CONFIG variables to avoid runtime bug b/385006505\n  var value \u003d null;\n  value \u003d event.getParameter(\"`CONFIG_alert_email_addr`\");\n  event.setParameter(\u0027emailAddress\u0027, value);\n  //value \u003d event.getParameter(\"`CONFIG_organizationList`\");\n  //event.setParameter(\u0027orgList\u0027, value);\n  value \u003d event.getParameter(\"`CONFIG_tableHeaderBg`\");\n  event.setParameter(\u0027tableHeaderBg\u0027, value);\n  value \u003d event.getParameter(\"`CONFIG_tableHeaderFg`\");\n  event.setParameter(\u0027tableHeaderFg\u0027, value);\n  event.setParameter(\u0027execId\u0027,event.getParameter(\"`ExecutionId`\"));\n}\n"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "36"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "JavaScript",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -1218,
+        "y": 378
+      }
+    },
+    {
+      "task": "FieldMappingTask",
+      "taskId": "4",
+      "parameters": {
+        "FieldMappingConfigTaskParameterKey": {
+          "key": "FieldMappingConfigTaskParameterKey",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_ARRAY\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$`Task_1_responseBody`$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"TO_JSON\"\n            }\n          }\n        }, {\n          \"functionType\": {\n            \"jsonFunction\": {\n              \"functionName\": \"TO_STRING_ARRAY\"\n            }\n          }\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$environmentsList$\",\n      \"fieldType\": \"STRING_ARRAY\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "3"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Extract Environments list",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -210,
+        "y": 378
+      }
+    },
+    {
+      "task": "FieldMappingTask",
+      "taskId": "5",
+      "parameters": {
+        "FieldMappingConfigTaskParameterKey": {
+          "key": "FieldMappingConfigTaskParameterKey",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$apigeeEnvironmentsUri$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/\"\n              }\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$environmentName$\"\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"/deployments\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$apigeeEnvDeploymentsUri$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "6"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Produce deployments URI",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -588,
+        "y": 126
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "6",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_6_responseBody`$"]
+            }
+          }
+        },
+        "authConfigName": {
+          "key": "authConfigName",
+          "value": {
+            "stringValue": "@@AUTH_CONFIG@@"
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "httpParams": {
+          "key": "httpParams",
+          "value": {}
+        },
+        "authConfig": {
+          "key": "authConfig",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\"\n}"
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_6_responseHeader`$"]
+            }
+          }
+        },
+        "userAgent": {
+          "key": "userAgent",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": ["$`Task_6_responseStatus`$"]
+            }
+          }
+        },
+        "timeout": {
+          "key": "timeout",
+          "value": {
+            "intValue": "0"
+          }
+        },
+        "url": {
+          "key": "url",
+          "value": {
+            "stringValue": "$apigeeEnvDeploymentsUri$"
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "requestorId": {
+          "key": "requestorId",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "urlQueryStrings": {
+          "key": "urlQueryStrings",
+          "value": {}
+        },
+        "jsonAdditionalHeaders": {
+          "key": "jsonAdditionalHeaders",
+          "value": {
+            "jsonValue": "null"
+          }
+        },
+        "requestBody": {
+          "key": "requestBody",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "additionalHeaders": {
+          "key": "additionalHeaders",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "37"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Retrieve deployments",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -714,
+        "y": 252
+      }
+    }
+  ],
+  "integrationParameters": [
+    {
+      "key": "`ExecutionMode`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`ExecutionMode`",
+      "isTransient": true
+    },
+    {
+      "key": "`ErrorInfo`",
+      "dataType": "JSON_VALUE",
+      "defaultValue": {
+        "jsonValue": "{\n  \"message\": \"\",\n  \"code\": 0.0\n}"
+      },
+      "displayName": "`ErrorInfo`",
+      "isTransient": true,
+      "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"code\": {\n      \"type\": \"number\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}"
+    },
+    {
+      "key": "`ExecutionId`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`ExecutionId`",
+      "isTransient": true
+    },
+    {
+      "key": "`IntegrationName`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`IntegrationName`",
+      "isTransient": true
+    },
+    {
+      "key": "`Region`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`Region`",
+      "isTransient": true
+    },
+    {
+      "key": "`ProjectId`",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "`ProjectId`",
+      "isTransient": true
+    },
+    {
+      "key": "`Task_1_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseHeader`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_1_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseBody`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_1_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseStatus`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "apigeeOrgBaseUri",
+      "dataType": "STRING_VALUE",
+      "displayName": "apigeeOrgBaseUri",
+      "inputOutputType": "IN_OUT"
+    },
+    {
+      "key": "`Task_3_loopMetadata`",
+      "dataType": "JSON_VALUE",
+      "displayName": "`Task_3_loopMetadata`",
+      "isTransient": true,
+      "producer": "1_3",
+      "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"sub_integration_execution_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"current_iteration_count\": {\n      \"type\": \"number\"\n    },\n    \"failure_message\": {\n      \"type\": \"string\"\n    },\n    \"failure_location\": {\n      \"type\": \"string\"\n    },\n    \"current_element\": {\n      \"type\": [\"string\", \"number\", \"object\", \"array\"]\n    }\n  }\n}"
+    },
+    {
+      "key": "environmentsList",
+      "dataType": "STRING_ARRAY",
+      "displayName": "environmentsList",
+      "inputOutputType": "IN_OUT"
+    },
+    {
+      "key": "environmentName",
+      "dataType": "STRING_VALUE",
+      "displayName": "environmentName",
+      "inputOutputType": "IN_OUT"
+    },
+    {
+      "key": "apigeeEnvironmentsUri",
+      "dataType": "STRING_VALUE",
+      "displayName": "apigeeEnvironmentsUri",
+      "inputOutputType": "IN_OUT"
+    },
+    {
+      "key": "`Task_6_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_6_responseHeader`",
+      "isTransient": true,
+      "producer": "1_6"
+    },
+    {
+      "key": "`Task_6_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_6_responseBody`",
+      "isTransient": true,
+      "producer": "1_6"
+    },
+    {
+      "key": "`Task_6_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_6_responseStatus`",
+      "isTransient": true,
+      "producer": "1_6"
+    },
+    {
+      "key": "deployments",
+      "dataType": "JSON_VALUE",
+      "defaultValue": {
+        "jsonValue": "{\n}"
+      },
+      "displayName": "deployments",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "`Task_25_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_25_responseHeader`",
+      "isTransient": true,
+      "producer": "1_25"
+    },
+    {
+      "key": "`Task_25_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_25_responseBody`",
+      "isTransient": true,
+      "producer": "1_25"
+    },
+    {
+      "key": "`Task_25_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_25_responseStatus`",
+      "isTransient": true,
+      "producer": "1_25"
+    },
+    {
+      "key": "`Task_27_loopMetadata`",
+      "dataType": "JSON_VALUE",
+      "displayName": "`Task_27_loopMetadata`",
+      "isTransient": true,
+      "producer": "1_27",
+      "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"sub_integration_execution_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"current_iteration_count\": {\n      \"type\": \"number\"\n    },\n    \"failure_message\": {\n      \"type\": \"string\"\n    },\n    \"failure_location\": {\n      \"type\": \"string\"\n    },\n    \"current_element\": {\n      \"type\": [\"string\", \"number\", \"object\", \"array\"]\n    }\n  }\n}"
+    },
+    {
+      "key": "instanceName",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "instanceName",
+      "inputOutputType": "IN"
+    },
+    {
+      "key": "attachmentsUri",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "attachmentsUri",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "`Task_29_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_29_responseHeader`",
+      "isTransient": true,
+      "producer": "1_29"
+    },
+    {
+      "key": "`Task_29_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_29_responseBody`",
+      "isTransient": true,
+      "producer": "1_29"
+    },
+    {
+      "key": "`Task_29_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_29_responseStatus`",
+      "isTransient": true,
+      "producer": "1_29"
+    },
+    {
+      "key": "instanceList",
+      "dataType": "STRING_ARRAY",
+      "displayName": "instanceList",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "`Task_33_loopMetadata`",
+      "dataType": "JSON_VALUE",
+      "displayName": "`Task_33_loopMetadata`",
+      "isTransient": true,
+      "producer": "1_33",
+      "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"sub_integration_execution_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"current_iteration_count\": {\n      \"type\": \"number\"\n    },\n    \"failure_message\": {\n      \"type\": \"string\"\n    },\n    \"failure_location\": {\n      \"type\": \"string\"\n    },\n    \"current_element\": {\n      \"type\": [\"string\", \"number\", \"object\", \"array\"]\n    }\n  }\n}"
+    },
+    {
+      "key": "orgList",
+      "dataType": "STRING_ARRAY",
+      "displayName": "orgList",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "orgName",
+      "dataType": "STRING_VALUE",
+      "displayName": "orgName",
+      "inputOutputType": "IN"
+    },
+    {
+      "key": "mappings",
+      "dataType": "JSON_VALUE",
+      "displayName": "mappings",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "apigeeInstancesUri",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "apigeeInstancesUri",
+      "inputOutputType": "IN_OUT"
+    },
+    {
+      "key": "aggregatedMappings",
+      "dataType": "JSON_VALUE",
+      "defaultValue": {
+        "jsonValue": "{\n}"
+      },
+      "displayName": "aggregatedMappings",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "environmentToInstanceMappings",
+      "dataType": "JSON_VALUE",
+      "displayName": "environmentToInstanceMappings",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "apigeeEnvDeploymentsUri",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "apigeeEnvDeploymentsUri",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "deploymentCounts",
+      "dataType": "JSON_VALUE",
+      "displayName": "deploymentCounts",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "totalCount",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "totalCount",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "emailAddress",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": ""
+      },
+      "displayName": "emailAddress",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "aggregatedDeploymentCounts",
+      "dataType": "JSON_VALUE",
+      "displayName": "aggregatedDeploymentCounts",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "aggregatedEnvironmentToInstanceMappings",
+      "dataType": "JSON_VALUE",
+      "displayName": "aggregatedEnvironmentToInstanceMappings",
+      "inputOutputType": "OUT"
+    }
+  ],
+  "databasePersistencePolicy": "DATABASE_PERSISTENCE_ASYNC",
+  "cloudLoggingDetails": {
+    "cloudLoggingSeverity": "CLOUD_LOGGING_SEVERITY_UNSPECIFIED",
+    "enableCloudLogging": false
+  },
+  "integrationConfigParameters": [
+    {
+      "parameter": {
+        "key": "`CONFIG_alert_email_addr`",
+        "dataType": "STRING_VALUE",
+        "defaultValue": {
+          "stringValue": "@@EMAIL_ADDR@@"
+        },
+        "displayName": "`CONFIG_alert_email_addr`"
+      },
+      "value": {
+        "stringValue": "@@EMAIL_ADDR@@"
+      }
+    },
+    {
+      "parameter": {
+        "key": "`CONFIG_organizationList`",
+        "dataType": "STRING_VALUE",
+        "defaultValue": {
+          "stringValue": "@@APIGEE_PROJECTS@@"
+        },
+        "displayName": "`CONFIG_organizationList`"
+      },
+      "value": {
+        "stringValue": "@@APIGEE_PROJECTS@@"
+      }
+    },
+    {
+      "parameter": {
+        "key": "`CONFIG_tableHeaderBg`",
+        "dataType": "STRING_VALUE",
+        "defaultValue": {
+          "stringValue": "dcdcdc"
+        },
+        "displayName": "`CONFIG_tableHeaderBg`"
+      },
+      "value": {
+        "stringValue": "dcdcdc"
+      }
+    },
+    {
+      "parameter": {
+        "key": "`CONFIG_tableHeaderFg`",
+        "dataType": "STRING_VALUE",
+        "defaultValue": {
+          "stringValue": "000080"
+        },
+        "displayName": "`CONFIG_tableHeaderFg`"
+      },
+      "value": {
+        "stringValue": "000080"
+      }
+    }
+  ]
+}
