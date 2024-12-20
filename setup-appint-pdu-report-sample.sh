@@ -210,9 +210,10 @@ replace_keywords_in_template() {
 
 printf "\nThis is the setup for the App Int PDU report sample.\n\n"
 check_shell_variables
-printf "random seed: %s\n\n" "$rand_string"
+printf "\nrandom seed: %s\n" "$rand_string"
 
 OUTFILE=$(mktemp /tmp/appint-samples.setup.out.XXXXXX)
+printf "\nrandom seed: %s\n" "$rand_string" >>"$OUTFILE"
 
 TOKEN=$(gcloud auth print-access-token)
 if [[ -z "$TOKEN" ]]; then
@@ -234,31 +235,40 @@ replace_keywords_in_template
 
 echo "--------------------" >>"$OUTFILE"
 echo "integrationcli integrations create -f $INTEGRATION_FILE -n $INTEGRATION_NAME -p $APPINT_PROJECT -r $REGION" >>"$OUTFILE"
-integrationcli integrations create -f "$INTEGRATION_FILE" -n "$INTEGRATION_NAME" -p "$APPINT_PROJECT" -r "$REGION" >>"$OUTFILE" 2>&1
+integrationcli integrations create -f "$INTEGRATION_FILE" -n "$INTEGRATION_NAME" -p "$APPINT_PROJECT" -r "$REGION" -t "$TOKEN" >>"$OUTFILE" 2>&1
+
+sleep 2
 
 verarr=($(integrationcli integrations versions list -n "$INTEGRATION_NAME" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
   grep "\"name\"" |
   sed -E 's/"name"://g' |
-  sed -E 's/[ \t,"]+//g' |
+  tr -d ' "\t' |
   sed -E 's@projects/[^/]+/locations/[^/]+/integrations/[^/]+/versions/@@'))
 
 if [[ ${#verarr[@]} -gt 0 ]]; then
+  printf "The Integration has been created. Now let's wait a bit before publishing.\n\n"
+  sleep 5
   ver="${verarr[0]}"
   echo "--------------------" >>"$OUTFILE"
   echo "integrationcli integrations versions publish -n $INTEGRATION_NAME -v $ver -r $REGION -p $APPINT_PROJECT" >>"$OUTFILE"
   integrationcli integrations versions publish -n "$INTEGRATION_NAME" -v "$ver" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" >>"$OUTFILE" 2>&1
+
+  printf "The Integration has been published. Now let's wait a bit for it to become available.\n\n"
+  sleep 16
+  printf "Now try to invoke it.\n\n"
+
+  trigger_id=$(grep cron_trigger "$INTEGRATION_FILE" |
+    sed -E 's/"triggerId"://g' |
+    tr -d ' "\t')
+  echo "$trigger_id" >./.trigger_id
+
+  invoke_one "$trigger_id" "$INTEGRATION_NAME"
+
+  console_link="https://console.cloud.google.com/integrations/edit/$INTEGRATION_NAME/locations/$REGION?project=$APPINT_PROJECT"
+  printf "To view, on Cloud Console, open this link:\n    %s\n\n" "$console_link"
+
+else
+  printf "Failed retrieving versions of the Integration we just created. Check the log file?\n"
+  printf "==> %s\n" "$OUTFILE"
+  exit 1
 fi
-
-printf "The Integration has been published. Now let's wait a bit for it to become available.\n\n"
-sleep 16
-printf "Now try to invoke it.\n\n"
-
-trigger_id=$(grep cron_trigger "$INTEGRATION_FILE" |
-  sed -E 's/"triggerId"://g' |
-  sed -E 's/[ \t,"]+//g')
-echo "$trigger_id" >./.trigger_id
-
-invoke_one "$trigger_id" "$INTEGRATION_NAME"
-
-console_link="https://console.cloud.google.com/integrations/edit/$INTEGRATION_NAME/locations/$REGION?project=$APPINT_PROJECT"
-printf "To view, on Cloud Console, open this link:\n    %s\n\n" "$console_link"

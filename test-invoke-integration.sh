@@ -22,7 +22,7 @@ if [[ ! -f .integration_name || ! -f .trigger_id ]]; then
 fi
 
 TOKEN=$(gcloud auth print-access-token)
-OUTFILE=$(mktemp /tmp/appint-samples.setup.out.XXXXXX)
+OUTFILE=$(mktemp /tmp/appint-samples.test-invoke.out.XXXXXX)
 INTEGRATION_NAME="$(<.integration_name)"
 trigger_id="$(<.trigger_id)"
 

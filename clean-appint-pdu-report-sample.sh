@@ -122,7 +122,7 @@ check_integrations_and_delete() {
   intarr=($(integrationcli integrations list -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
     grep "\"name\"" |
     sed -E 's/"name"://g' |
-    sed -E 's/[ \t,"]+//g' |
+    tr -d ' "\t' |
     sed -E 's@projects/[^/]+/locations/[^/]+/integrations/@@'))
   for a in "${intarr[@]}"; do
     #printf "  Checking $a...\n" "$a"
@@ -134,7 +134,7 @@ check_integrations_and_delete() {
       verarr=($(integrationcli integrations versions list -n "$a" --filter "state=ACTIVE" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
         grep "\"name\"" |
         sed -E 's/"name"://g' |
-        sed -E 's/[ \t,"]+//g' |
+        tr -d ' "\t' |
         sed -E 's@projects/[^/]+/locations/[^/]+/integrations/[^/]+/versions/@@'))
       for v in "${verarr[@]}"; do
         printf "    version %s...\n" "$v"
