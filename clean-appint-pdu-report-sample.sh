@@ -88,9 +88,9 @@ remove_iam_policy_bindings() {
           printf "    Removing IAM binding for %s\n" "$member"
           echo "--------------------" >>"$OUTFILE"
           echo "gcloud projects remove-iam-policy-binding ${APIGEE_PROJECT} \
-            --member=$member --role=$role" >>"$OUTFILE"
+            --member=$member --role=$role --all" >>"$OUTFILE"
           gcloud projects remove-iam-policy-binding "${APIGEE_PROJECT}" \
-            --member="$member" --role="$role" >>"$OUTFILE" 2>&1
+            --member="$member" --role="$role" --all >>"$OUTFILE" 2>&1
         done
       done
     else
@@ -128,18 +128,19 @@ check_integrations_and_delete() {
     #printf "  Checking $a...\n" "$a"
     if beginswith "$APPINT_SA_BASE" "$a"; then
       printf "  Checking $a...\n" "$a"
-      # get the versions
-      verarr=($(integrationcli integrations versions list -n "$a" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
+      echo "--------------------" >>"$OUTFILE"
+      echo "Find versions of $a that are published." >>"$OUTFILE"
+
+      verarr=($(integrationcli integrations versions list -n "$a" --filter "state=ACTIVE" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
         grep "\"name\"" |
         sed -E 's/"name"://g' |
         sed -E 's/[ \t,"]+//g' |
         sed -E 's@projects/[^/]+/locations/[^/]+/integrations/[^/]+/versions/@@'))
       for v in "${verarr[@]}"; do
         printf "    version %s...\n" "$v"
-        # it may or may not be published. This may fail.
-        echo "--------------------" echo "integrationcli integrations versions unpublish -n $a -v $v -r $REGION -p $APPINT_PROJECT" >>"$OUTFILE" >>"$OUTFILE"
+        echo "--------------------" >>"$OUTFILE"
+        echo "integrationcli integrations versions unpublish -n $a -v $v -r $REGION -p $APPINT_PROJECT" >>"$OUTFILE"
         integrationcli integrations versions unpublish -n "$a" -v "$v" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" >>"$OUTFILE" 2>&1
-        #>>"$OUTFILE" 2>&1
       done
       # finally, delete it
       echo "--------------------" >>"$OUTFILE"
@@ -163,6 +164,10 @@ check_integrations_and_delete
 check_auth_configs_and_maybe_delete
 remove_iam_policy_bindings
 remove_service_accounts
+
+rm -f .integration_name
+rm -f .trigger_id
+rm -f .appint_sa_name
 
 echo " "
 echo "All the artifacts for this sample have now been removed."

@@ -21,7 +21,8 @@ APPINT_SA="${EXAMPLE_NAME}-${rand_string}"
 INTEGRATION_NAME="${EXAMPLE_NAME}-${rand_string}"
 FULL_SA_EMAIL="${APPINT_SA}@${APPINT_PROJECT}.iam.gserviceaccount.com"
 SA_REQUIRED_ROLES=("roles/apigee.readOnlyAdmin")
-APPINT_ENDPT=https://integrations.googleapis.com
+echo "$INTEGRATION_NAME" >./.integration_name
+
 # readOnlyAdmin is more more than sufficient. Permissions needed:
 #   apigee.instanceattachments.get
 #   apigee.instanceattachments.list
@@ -195,35 +196,30 @@ check_and_maybe_create_sa() {
 }
 
 replace_keywords_in_template() {
-  sed -i "s/@@AUTH_CONFIG@@/${AUTH_CONFIG}/g" $INTEGRATION_FILE
-  sed -i "s/@@FULL_SA_EMAIL@@/${FULL_SA_EMAIL}/g" $INTEGRATION_FILE
-  sed -i "s/@@EMAIL_ADDR@@/${EMAIL_ADDR}/g" $INTEGRATION_FILE
-  sed -i "s/@@APIGEE_PROJECTS@@/${APIGEE_PROJECTS}/g" $INTEGRATION_FILE
-  sed -i "s/@@INTEGRATION_NAME@@/${INTEGRATION_NAME}/g" $INTEGRATION_FILE
-}
-
-invoke_one() {
-  local url trigger_id
-  trigger_id="$1"
-  url="${APPINT_ENDPT}/v1/projects/${APPINT_PROJECT}/locations/${REGION}/integrations/${INTEGRATION_NAME}:execute"
-
-  printf "to invoke:\n"
-  printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
-
-  CURL -X POST "${url}" -H 'Content-Type: application/json' \
-    -d '{  "triggerId": "'$trigger_id'" }'
-
-  cat ${CURL_OUT}
+  local TMP
+  TMP=$(mktemp /tmp/appint-samples.tmp.out.XXXXXX)
+  sed "s/@@AUTH_CONFIG@@/${AUTH_CONFIG}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  sed "s/@@FULL_SA_EMAIL@@/${FULL_SA_EMAIL}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  sed "s/@@EMAIL_ADDR@@/${EMAIL_ADDR}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  sed "s/@@APIGEE_PROJECTS@@/${APIGEE_PROJECTS}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  sed "s/@@INTEGRATION_NAME@@/${INTEGRATION_NAME}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  rm -f $TMP
 }
 
 # ====================================================================
 
 printf "\nThis is the setup for the App Int PDU report sample.\n\n"
 check_shell_variables
+printf "random seed: %s\n\n" "$rand_string"
 
 OUTFILE=$(mktemp /tmp/appint-samples.setup.out.XXXXXX)
 
 TOKEN=$(gcloud auth print-access-token)
+if [[ -z "$TOKEN" ]]; then
+  printf "you must have the gcloud cli on your path to use this tool.\n"
+  exit 1
+fi
+
 googleapis_whoami
 
 maybe_install_integrationcli
@@ -231,14 +227,14 @@ check_and_maybe_create_sa
 check_auth_configs_and_maybe_create
 
 # Replace all the keywords
-INTEGRATION_FILE="apigee-pdu-check-${rand_string}.json"
-cp ./content/apigee-pdu-check-v48-template.json "$INTEGRATION_FILE"
+INTEGRATION_FILE="${EXAMPLE_NAME}-${rand_string}.json"
+cp ./content/apigee-pdu-check-v49-template.json "$INTEGRATION_FILE"
 
 replace_keywords_in_template
 
 echo "--------------------" >>"$OUTFILE"
-echo "integrationcli integrations create -f $INTEGRATION_FILE -n $INTEGRATION_NAME" >>"$OUTFILE"
-integrationcli integrations create -f "$INTEGRATION_FILE" -n "$INTEGRATION_NAME" >>"$OUTFILE" 2>&1
+echo "integrationcli integrations create -f $INTEGRATION_FILE -n $INTEGRATION_NAME -p $APPINT_PROJECT -r $REGION" >>"$OUTFILE"
+integrationcli integrations create -f "$INTEGRATION_FILE" -n "$INTEGRATION_NAME" -p "$APPINT_PROJECT" -r "$REGION" >>"$OUTFILE" 2>&1
 
 verarr=($(integrationcli integrations versions list -n "$INTEGRATION_NAME" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
   grep "\"name\"" |
@@ -253,12 +249,16 @@ if [[ ${#verarr[@]} -gt 0 ]]; then
   integrationcli integrations versions publish -n "$INTEGRATION_NAME" -v "$ver" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" >>"$OUTFILE" 2>&1
 fi
 
-printf "The Integration has been published. Now wait a bit for it to become available.\n\n"
+printf "The Integration has been published. Now let's wait a bit for it to become available.\n\n"
 sleep 16
 printf "Now try to invoke it.\n\n"
 
 trigger_id=$(grep cron_trigger "$INTEGRATION_FILE" |
   sed -E 's/"triggerId"://g' |
   sed -E 's/[ \t,"]+//g')
+echo "$trigger_id" >./.trigger_id
 
-invoke_one $trigger_id
+invoke_one "$trigger_id" "$INTEGRATION_NAME"
+
+console_link="https://console.cloud.google.com/integrations/edit/$INTEGRATION_NAME/locations/$REGION?project=$APPINT_PROJECT"
+printf "To view, on Cloud Console, open this link:\n    %s\n\n" "$console_link"

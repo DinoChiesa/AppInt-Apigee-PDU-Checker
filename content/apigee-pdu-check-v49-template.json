@@ -1,9 +1,7 @@
 {
-  "name": "projects/511582533367/locations/us-west1/integrations/@@INTEGRATION_NAME@@/versions/532d3707-c5e5-4eca-88dd-d8a1138fc015",
+  "name": "projects/511582533367/locations/us-west1/integrations/@@INTEGRATION_NAME@@/versions/4354a0cb-c14a-4273-8845-18fce3b61ee7",
   "description": "Counts Proxy deployment units for a specific set of Apigee organizations.",
-  "updateTime": "2024-12-20T07:46:52.742Z",
-  "createTime": "2024-12-20T07:44:39.994Z",
-  "lastModifierEmail": "admin@dchiesa.altostrat.com",
+  "createTime": "2024-12-20T19:58:48.765Z",
   "triggerConfigs": [
     {
       "label": "Query Organization",
@@ -19,7 +17,8 @@
       "triggerNumber": "8",
       "triggerId": "private_trigger/@@INTEGRATION_NAME@@-one-org",
       "position": {
-        "x": -336
+        "x": 324,
+        "y": 42
       }
     },
     {
@@ -36,7 +35,8 @@
       "triggerNumber": "5",
       "triggerId": "private_trigger/@@INTEGRATION_NAME@@-one-env",
       "position": {
-        "x": -588
+        "x": 748,
+        "y": 42
       }
     },
     {
@@ -53,7 +53,8 @@
       "triggerNumber": "9",
       "triggerId": "private_trigger/@@INTEGRATION_NAME@@-instance",
       "position": {
-        "x": -840
+        "x": 1172,
+        "y": 42
       }
     },
     {
@@ -71,7 +72,8 @@
       "triggerNumber": "1",
       "triggerId": "cron_trigger/@@INTEGRATION_NAME@@er_Timer_1/51+21+*+*+*",
       "position": {
-        "x": -1092
+        "x": 1596,
+        "y": 42
       }
     }
   ],
@@ -107,8 +109,7 @@
           }
         },
         "httpParams": {
-          "key": "httpParams",
-          "value": {}
+          "key": "httpParams"
         },
         "authConfig": {
           "key": "authConfig",
@@ -175,8 +176,7 @@
           }
         },
         "urlQueryStrings": {
-          "key": "urlQueryStrings",
-          "value": {}
+          "key": "urlQueryStrings"
         },
         "jsonAdditionalHeaders": {
           "key": "jsonAdditionalHeaders",
@@ -197,8 +197,7 @@
           }
         },
         "additionalHeaders": {
-          "key": "additionalHeaders",
-          "value": {}
+          "key": "additionalHeaders"
         }
       },
       "nextTasks": [
@@ -210,8 +209,8 @@
       "displayName": "Retrieve Environments",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -210,
-        "y": 252
+        "x": 112,
+        "y": 786
       }
     },
     {
@@ -227,9 +226,6 @@
       },
       "nextTasks": [
         {
-          "taskId": "1"
-        },
-        {
           "taskId": "25"
         }
       ],
@@ -237,8 +233,8 @@
       "displayName": "Produce initial URIs",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -336,
-        "y": 126
+        "x": 324,
+        "y": 166
       }
     },
     {
@@ -272,8 +268,7 @@
           }
         },
         "httpParams": {
-          "key": "httpParams",
-          "value": {}
+          "key": "httpParams"
         },
         "authConfig": {
           "key": "authConfig",
@@ -340,8 +335,7 @@
           }
         },
         "urlQueryStrings": {
-          "key": "urlQueryStrings",
-          "value": {}
+          "key": "urlQueryStrings"
         },
         "jsonAdditionalHeaders": {
           "key": "jsonAdditionalHeaders",
@@ -362,8 +356,7 @@
           }
         },
         "additionalHeaders": {
-          "key": "additionalHeaders",
-          "value": {}
+          "key": "additionalHeaders"
         }
       },
       "nextTasks": [
@@ -375,8 +368,8 @@
       "displayName": "Retrieve Instances",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -462,
-        "y": 252
+        "x": 324,
+        "y": 290
       }
     },
     {
@@ -386,21 +379,26 @@
         "template": {
           "key": "template",
           "value": {
-            "stringValue": "{\n    instanceList: [x.name for x in std.parseJson(std.extVar(\"`Task_25_responseBody`\")).instances]\n}"
+            "stringValue": "local resp \u003d std.parseJson(std.extVar(\"`Task_25_responseBody`\"));\n\nlocal instanceList \u003d if std.objectHas(resp, \"instances\") then\n        [x.name for x in resp.instances]\n      else\n        [];\n\n{\n    instanceList: instanceList,\n    numInstances: std.length(instanceList)\n}"
           }
         }
       },
       "nextTasks": [
         {
-          "taskId": "27"
+          "taskId": "27",
+          "condition": "$numInstances$ \u003e 0"
+        },
+        {
+          "taskId": "39",
+          "condition": "$numInstances$ \u003d 0"
         }
       ],
       "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
       "displayName": "extract instance names",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -462,
-        "y": 378
+        "x": 324,
+        "y": 414
       }
     },
     {
@@ -471,8 +469,8 @@
       "displayName": "For Each Instance",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -588,
-        "y": 504
+        "x": 112,
+        "y": 538
       }
     },
     {
@@ -495,8 +493,8 @@
       "displayName": "Produce URI for one instance",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -840,
-        "y": 126
+        "x": 1172,
+        "y": 166
       }
     },
     {
@@ -633,8 +631,8 @@
       "displayName": "Get Instance Attachments",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -966,
-        "y": 252
+        "x": 1172,
+        "y": 290
       }
     },
     {
@@ -700,8 +698,8 @@
       "displayName": "For Each environment",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -714,
-        "y": 756
+        "x": 112,
+        "y": 1034
       }
     },
     {
@@ -719,8 +717,8 @@
       "displayName": "Figure mapping of environments to instances",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -966,
-        "y": 378
+        "x": 1172,
+        "y": 414
       }
     },
     {
@@ -743,8 +741,8 @@
       "displayName": "Split org list",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -1092,
-        "y": 126
+        "x": 1596,
+        "y": 166
       }
     },
     {
@@ -796,7 +794,8 @@
           }
         },
         "requestParameterMapping": {
-          "key": "requestParameterMapping"
+          "key": "requestParameterMapping",
+          "value": {}
         },
         "overrideParameterMapping": {
           "key": "overrideParameterMapping",
@@ -812,8 +811,8 @@
       "displayName": "For Each org",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -1218,
-        "y": 252
+        "x": 1596,
+        "y": 290
       }
     },
     {
@@ -829,15 +828,15 @@
       },
       "nextTasks": [
         {
-          "taskId": "3"
+          "taskId": "1"
         }
       ],
       "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
       "displayName": "Map Environments to Instances",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -714,
-        "y": 630
+        "x": 112,
+        "y": 662
       }
     },
     {
@@ -905,8 +904,8 @@
       "displayName": "Send Email Report",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -840,
-        "y": 504
+        "x": 1596,
+        "y": 538
       }
     },
     {
@@ -924,8 +923,8 @@
       "displayName": "Compute Deployments per env",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -714,
-        "y": 378
+        "x": 748,
+        "y": 414
       }
     },
     {
@@ -948,8 +947,27 @@
       "displayName": "JavaScript",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -1218,
-        "y": 378
+        "x": 1596,
+        "y": 414
+      }
+    },
+    {
+      "task": "JsonnetMapperTask",
+      "taskId": "39",
+      "parameters": {
+        "template": {
+          "key": "template",
+          "value": {
+            "stringValue": "{\n     environmentToInstanceMappings : {} ,\n     deploymentCounts: []\n}\n"
+          }
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Set default values",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": 748,
+        "y": 538
       }
     },
     {
@@ -972,8 +990,8 @@
       "displayName": "Extract Environments list",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -210,
-        "y": 378
+        "x": 112,
+        "y": 910
       }
     },
     {
@@ -996,8 +1014,8 @@
       "displayName": "Produce deployments URI",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -588,
-        "y": 126
+        "x": 748,
+        "y": 166
       }
     },
     {
@@ -1134,8 +1152,8 @@
       "displayName": "Retrieve deployments",
       "externalTaskType": "NORMAL_TASK",
       "position": {
-        "x": -714,
-        "y": 252
+        "x": 748,
+        "y": 290
       }
     }
   ],
@@ -1270,15 +1288,6 @@
       "producer": "1_6"
     },
     {
-      "key": "deployments",
-      "dataType": "JSON_VALUE",
-      "defaultValue": {
-        "jsonValue": "{\n}"
-      },
-      "displayName": "deployments",
-      "inputOutputType": "OUT"
-    },
-    {
       "key": "`Task_25_responseHeader`",
       "dataType": "STRING_VALUE",
       "displayName": "`Task_25_responseHeader`",
@@ -1373,12 +1382,6 @@
       "inputOutputType": "IN"
     },
     {
-      "key": "mappings",
-      "dataType": "JSON_VALUE",
-      "displayName": "mappings",
-      "inputOutputType": "OUT"
-    },
-    {
       "key": "apigeeInstancesUri",
       "dataType": "STRING_VALUE",
       "defaultValue": {
@@ -1388,33 +1391,12 @@
       "inputOutputType": "IN_OUT"
     },
     {
-      "key": "aggregatedMappings",
-      "dataType": "JSON_VALUE",
-      "defaultValue": {
-        "jsonValue": "{\n}"
-      },
-      "displayName": "aggregatedMappings",
-      "inputOutputType": "OUT"
-    },
-    {
-      "key": "environmentToInstanceMappings",
-      "dataType": "JSON_VALUE",
-      "displayName": "environmentToInstanceMappings",
-      "inputOutputType": "OUT"
-    },
-    {
       "key": "apigeeEnvDeploymentsUri",
       "dataType": "STRING_VALUE",
       "defaultValue": {
         "stringValue": ""
       },
       "displayName": "apigeeEnvDeploymentsUri",
-      "inputOutputType": "OUT"
-    },
-    {
-      "key": "deploymentCounts",
-      "dataType": "JSON_VALUE",
-      "displayName": "deploymentCounts",
       "inputOutputType": "OUT"
     },
     {
@@ -1436,15 +1418,61 @@
       "inputOutputType": "OUT"
     },
     {
-      "key": "aggregatedDeploymentCounts",
+      "key": "numInstances",
+      "dataType": "INT_VALUE",
+      "defaultValue": {
+        "intValue": "0"
+      },
+      "displayName": "numInstances",
+      "inputOutputType": "OUT",
+      "description": "The number of instances found in an organization."
+    },
+    {
+      "key": "deploymentCounts",
       "dataType": "JSON_VALUE",
-      "displayName": "aggregatedDeploymentCounts",
+      "displayName": "deploymentCounts",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "environmentToInstanceMappings",
+      "dataType": "JSON_VALUE",
+      "displayName": "environmentToInstanceMappings",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "deployments",
+      "dataType": "JSON_VALUE",
+      "defaultValue": {
+        "jsonValue": "{\n}"
+      },
+      "displayName": "deployments",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "mappings",
+      "dataType": "JSON_VALUE",
+      "displayName": "mappings",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "aggregatedMappings",
+      "dataType": "JSON_VALUE",
+      "defaultValue": {
+        "jsonValue": "[]"
+      },
+      "displayName": "aggregatedMappings",
       "inputOutputType": "OUT"
     },
     {
       "key": "aggregatedEnvironmentToInstanceMappings",
       "dataType": "JSON_VALUE",
       "displayName": "aggregatedEnvironmentToInstanceMappings",
+      "inputOutputType": "OUT"
+    },
+    {
+      "key": "aggregatedDeploymentCounts",
+      "dataType": "JSON_VALUE",
+      "displayName": "aggregatedDeploymentCounts",
       "inputOutputType": "OUT"
     }
   ],
@@ -1462,9 +1490,6 @@
           "stringValue": "@@EMAIL_ADDR@@"
         },
         "displayName": "`CONFIG_alert_email_addr`"
-      },
-      "value": {
-        "stringValue": "@@EMAIL_ADDR@@"
       }
     },
     {
@@ -1475,9 +1500,6 @@
           "stringValue": "@@APIGEE_PROJECTS@@"
         },
         "displayName": "`CONFIG_organizationList`"
-      },
-      "value": {
-        "stringValue": "@@APIGEE_PROJECTS@@"
       }
     },
     {
@@ -1488,9 +1510,6 @@
           "stringValue": "dcdcdc"
         },
         "displayName": "`CONFIG_tableHeaderBg`"
-      },
-      "value": {
-        "stringValue": "dcdcdc"
       }
     },
     {
@@ -1501,9 +1520,6 @@
           "stringValue": "000080"
         },
         "displayName": "`CONFIG_tableHeaderFg`"
-      },
-      "value": {
-        "stringValue": "000080"
       }
     }
   ]
