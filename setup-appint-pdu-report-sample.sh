@@ -223,7 +223,6 @@ if [[ -z "$TOKEN" ]]; then
 fi
 
 googleapis_whoami
-
 maybe_install_integrationcli
 check_and_maybe_create_sa
 check_auth_configs_and_maybe_create
@@ -238,6 +237,7 @@ echo "--------------------" >>"$OUTFILE"
 echo "integrationcli integrations create -f $INTEGRATION_FILE -n $INTEGRATION_NAME -p $APPINT_PROJECT -r $REGION" >>"$OUTFILE"
 integrationcli integrations create -f "$INTEGRATION_FILE" -n "$INTEGRATION_NAME" -p "$APPINT_PROJECT" -r "$REGION" -t "$TOKEN" >>"$OUTFILE" 2>&1
 
+# If we try to list versions straightaway, sometimes it does not work
 sleep 2
 
 verarr=($(integrationcli integrations versions list -n "$INTEGRATION_NAME" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |

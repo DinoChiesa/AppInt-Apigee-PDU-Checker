@@ -15,42 +15,6 @@
 
 APPINT_ENDPT=https://integrations.googleapis.com
 
-# is_directory_changed() {
-#   # Compute a checksum of the files inside the directory, compare it to any
-#   # previous checksum, to determine if any change has been made. This can help
-#   # avoid an unnecessary re-import and re-deploy, when modifying the proxy and
-#   # deploying iteratively.
-#   local dir_of_interest
-#   dir_of_interest=$1
-#   local parent_name
-#   parent_name=$(dirname "${dir_of_interest}")
-#   local short_name
-#   short_name=$(basename "${dir_of_interest}")
-#   local NEW_SHASUM_FILE
-#   # shellcheck disable=SC2154
-#   NEW_SHASUM_FILE=$(mktemp "/tmp/${scriptid}.out.XXXXXX")
-#   # https://stackoverflow.com/a/5431932
-#   tar -cf - --exclude='*.*~' --exclude='*~' "$dir_of_interest" | shasum >"$NEW_SHASUM_FILE"
-#   local PERM_SHASUM_FILE="${parent_name}/.${short_name}.shasum"
-#   if [[ -f "${PERM_SHASUM_FILE}" ]]; then
-#     local current_value
-#     current_value=$(<"$NEW_SHASUM_FILE")
-#     current_value="${current_value//[$'\t\r\n ']/}"
-#     local previous_value
-#     previous_value=$(<"$PERM_SHASUM_FILE")
-#     previous_value="${previous_value//[$'\t\r\n ']/}"
-#     if [[ "$current_value" == "$previous_value" ]]; then
-#       false
-#     else
-#       cp "$NEW_SHASUM_FILE" "${PERM_SHASUM_FILE}"
-#       true
-#     fi
-#   else
-#     cp "$NEW_SHASUM_FILE" "${PERM_SHASUM_FILE}"
-#     true
-#   fi
-# }
-
 maybe_install_integrationcli() {
   if [[ ! -d "$HOME/.apigeecli/bin" ]]; then
     echo "\nInstalling integrationcli"
@@ -65,6 +29,7 @@ CURL() {
   #[[ $verbosity -gt 0 ]] && echo "curl $@"
   echo "--------------------" >>"$OUTFILE"
   echo "curl $@" >>"$OUTFILE"
+  [[ $verbosity -gt 0 ]] && echo "curl $@"
   CURL_RC=$(curl -s -w "%{http_code}" -H "Authorization: Bearer $TOKEN" -o "${CURL_OUT}" "$@")
   [[ $verbosity -gt 0 ]] && echo "==> ${CURL_RC}"
   echo "==> ${CURL_RC}" >>"$OUTFILE"
@@ -128,9 +93,7 @@ invoke_one() {
 
   if [[ -z "$3" || "$3" != "just-show-command" ]]; then
     printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
-
-    CURL -X POST "${url}" -H 'Content-Type: application/json' \
-      -d '{  "triggerId": "'$trigger_id'" }'
+    CURL -X POST "${url}" -H 'Content-Type: application/json' -d '{  "triggerId": "'$trigger_id'" }'
     cat ${CURL_OUT}
   else
     printf "To invoke:\n"

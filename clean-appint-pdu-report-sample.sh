@@ -158,10 +158,14 @@ printf "\nLogging to %s\n" "$OUTFILE"
 
 # it is necessary to get a token... if using curl or integrationcli for anything
 TOKEN=$(gcloud auth print-access-token)
+if [[ -z "$TOKEN" ]]; then
+  printf "you must have the gcloud cli on your path to use this tool.\n"
+  exit 1
+fi
+
 googleapis_whoami
 maybe_install_integrationcli
 check_integrations_and_delete
-
 check_auth_configs_and_maybe_delete
 remove_iam_policy_bindings
 remove_service_accounts
@@ -170,6 +174,4 @@ rm -f .integration_name
 rm -f .trigger_id
 rm -f .appint_sa_name
 
-echo " "
-echo "All the artifacts for this sample have now been removed."
-echo " "
+print "\n\nAll the artifacts for this sample have now been removed.\n"
