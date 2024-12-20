@@ -1490,6 +1490,9 @@
           "stringValue": "@@EMAIL_ADDR@@"
         },
         "displayName": "`CONFIG_alert_email_addr`"
+      },
+      "value": {
+        "stringValue": "@@EMAIL_ADDR@@"
       }
     },
     {
@@ -1500,6 +1503,9 @@
           "stringValue": "@@APIGEE_PROJECTS@@"
         },
         "displayName": "`CONFIG_organizationList`"
+      },
+      "value": {
+        "stringValue": "@@APIGEE_PROJECTS@@"
       }
     },
     {
@@ -1510,6 +1516,9 @@
           "stringValue": "dcdcdc"
         },
         "displayName": "`CONFIG_tableHeaderBg`"
+      },
+      "value": {
+        "stringValue": "dcdcdc"
       }
     },
     {
@@ -1520,6 +1529,9 @@
           "stringValue": "000080"
         },
         "displayName": "`CONFIG_tableHeaderFg`"
+      },
+      "value": {
+        "stringValue": "000080"
       }
     }
   ]
