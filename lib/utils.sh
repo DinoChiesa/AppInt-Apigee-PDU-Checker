@@ -96,7 +96,7 @@ invoke_one() {
     CURL -X POST "${url}" -H 'Content-Type: application/json' -d '{  "triggerId": "'$trigger_id'" }'
     cat ${CURL_OUT}
   else
-    printf "To invoke:\n"
+    printf "To invoke yourself:\n"
     printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
   fi
 }

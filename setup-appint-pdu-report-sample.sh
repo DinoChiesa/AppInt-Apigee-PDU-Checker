@@ -269,6 +269,7 @@ if [[ ${#verarr[@]} -gt 0 ]]; then
   printf "\nTo view the uploaded integration on Cloud Console, open this link:\n    %s\n\n" "$console_link"
 
   invoke_one "$trigger_id" "$INTEGRATION_NAME" "just-show-command"
+  printf "\n\n"
 
 else
   printf "Failed retrieving versions of the Integration we just created. Check the log file?\n"

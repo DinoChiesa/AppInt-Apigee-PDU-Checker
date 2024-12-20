@@ -174,4 +174,4 @@ rm -f .integration_name
 rm -f .trigger_id
 rm -f .appint_sa_name
 
-print "\n\nAll the artifacts for this sample have now been removed.\n"
+printf "\n\nAll the artifacts for this sample have now been removed.\n"
