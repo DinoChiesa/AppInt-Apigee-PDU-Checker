@@ -122,7 +122,7 @@ check_integrations_and_delete() {
   intarr=($(integrationcli integrations list -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
     grep "\"name\"" |
     sed -E 's/"name"://g' |
-    tr -d ' "\t' |
+    tr -d ' "\t,' |
     sed -E 's@projects/[^/]+/locations/[^/]+/integrations/@@'))
   for a in "${intarr[@]}"; do
     #printf "  Checking $a...\n" "$a"
@@ -134,7 +134,7 @@ check_integrations_and_delete() {
       verarr=($(integrationcli integrations versions list -n "$a" --filter "state=ACTIVE" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" |
         grep "\"name\"" |
         sed -E 's/"name"://g' |
-        tr -d ' "\t' |
+        tr -d ' "\t,' |
         sed -E 's@projects/[^/]+/locations/[^/]+/integrations/[^/]+/versions/@@'))
       for v in "${verarr[@]}"; do
         printf "    version %s...\n" "$v"
@@ -154,6 +154,7 @@ check_integrations_and_delete() {
 check_shell_variables
 
 OUTFILE=$(mktemp /tmp/appint-samples.cleanup.out.XXXXXX)
+printf "\nLogging to %s\n" "$OUTFILE"
 
 # it is necessary to get a token... if using curl or integrationcli for anything
 TOKEN=$(gcloud auth print-access-token)

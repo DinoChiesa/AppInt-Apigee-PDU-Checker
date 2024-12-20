@@ -118,7 +118,7 @@ check_shell_variables() {
 invoke_one() {
   local url trigger_id integration_name
   if [[ -z "$1" || -z "$2" ]]; then
-    printf "invoke_one needs two arguments."
+    printf "invoke_one needs at least two arguments."
     exit 1
   fi
 
@@ -126,11 +126,14 @@ invoke_one() {
   integration_name="$2"
   url="${APPINT_ENDPT}/v1/projects/${APPINT_PROJECT}/locations/${REGION}/integrations/${integration_name}:execute"
 
-  printf "to invoke:\n"
-  printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
+  if [[ -z "$3" || "$3" != "just-show-command" ]]; then
+    printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
 
-  CURL -X POST "${url}" -H 'Content-Type: application/json' \
-    -d '{  "triggerId": "'$trigger_id'" }'
-
-  cat ${CURL_OUT}
+    CURL -X POST "${url}" -H 'Content-Type: application/json' \
+      -d '{  "triggerId": "'$trigger_id'" }'
+    cat ${CURL_OUT}
+  else
+    printf "To invoke:\n"
+    printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
+  fi
 }
