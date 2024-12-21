@@ -47,11 +47,11 @@
         }
       ],
       "properties": {
-        "Trigger name": "@@INTEGRATION_NAME@@-instance"
+        "Trigger name": "@@INTEGRATION_NAME@@-one-instance"
       },
       "triggerType": "PRIVATE_TRIGGER",
       "triggerNumber": "9",
-      "triggerId": "private_trigger/@@INTEGRATION_NAME@@-instance",
+      "triggerId": "private_trigger/@@INTEGRATION_NAME@@-one-instance",
       "position": {
         "x": 1172,
         "y": 42
@@ -66,11 +66,11 @@
       ],
       "properties": {
         "Scheduled Time spec": "51 21 * * *",
-        "Timer Name": "@@INTEGRATION_NAME@@er_Timer_1"
+        "Timer Name": "@@INTEGRATION_NAME@@_Timer_1"
       },
       "triggerType": "CRON",
       "triggerNumber": "1",
-      "triggerId": "cron_trigger/@@INTEGRATION_NAME@@er_Timer_1/51+21+*+*+*",
+      "triggerId": "cron_trigger/@@INTEGRATION_NAME@@_Timer_1/51+21+*+*+*",
       "position": {
         "x": 1596,
         "y": 42
@@ -420,7 +420,7 @@
         "triggerId": {
           "key": "triggerId",
           "value": {
-            "stringValue": "private_trigger/@@INTEGRATION_NAME@@-instance"
+            "stringValue": "private_trigger/@@INTEGRATION_NAME@@-one-instance"
           }
         },
         "loopMetadata": {

@@ -16,7 +16,7 @@
 
 TIMESTAMP=$(date '+%Y%m%d-%H%M%S')
 # shellcheck disable=SC2002
-rand_string=$(cat /dev/urandom | LC_CTYPE=C tr -cd '[:alnum:]' | head -c 6 | tr '[:upper:]' '[:lower:]')
+rand_string=$(cat /dev/urandom | LC_CTYPE=C tr -cd '[:alnum:]' | head -c 4 | tr '[:upper:]' '[:lower:]')
 APPINT_SA="${EXAMPLE_NAME}-${rand_string}"
 INTEGRATION_NAME="${EXAMPLE_NAME}-${rand_string}"
 FULL_SA_EMAIL="${APPINT_SA}@${APPINT_PROJECT}.iam.gserviceaccount.com"
@@ -197,7 +197,7 @@ check_and_maybe_create_sa() {
 
 replace_keywords_in_template() {
   local TMP
-  TMP=$(mktemp /tmp/appint-samples.tmp.out.XXXXXX)
+  TMP=$(mktemp /tmp/appint-setup.tmp.out.XXXXXX)
   sed "s/@@AUTH_CONFIG@@/${AUTH_CONFIG}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
   sed "s/@@FULL_SA_EMAIL@@/${FULL_SA_EMAIL}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
   sed "s/@@EMAIL_ADDR@@/${EMAIL_ADDR}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
@@ -207,18 +207,19 @@ replace_keywords_in_template() {
 }
 
 # ====================================================================
-
 printf "\nThis is the setup for the App Int PDU report sample.\n\n"
+OUTFILE=$(mktemp /tmp/appint-sample.setup.out.XXXXXX)
+printf "Logging to %s\n\n" "$OUTFILE"
+
+printf "timestamp: %s\n" "$TIMESTAMP" >>"$OUTFILE"
 check_shell_variables
 printf "\nrandom seed: %s\n" "$rand_string"
-
-OUTFILE=$(mktemp /tmp/appint-samples.setup.out.XXXXXX)
-printf "\nLogging to %s\n" "$OUTFILE"
-printf "\nrandom seed: %s\n" "$rand_string" >>"$OUTFILE"
+printf "random seed: %s\n" "$rand_string" >>"$OUTFILE"
 
 TOKEN=$(gcloud auth print-access-token)
 if [[ -z "$TOKEN" ]]; then
   printf "you must have the gcloud cli on your path to use this tool.\n"
+  printf "you must have the gcloud cli on your path to use this tool.\n" >>"$OUTFILE"
   exit 1
 fi
 

@@ -44,7 +44,7 @@ You can set:
 
 - `EXAMPLE_NAME` - the name of the integration that will get created in your project.
 
-- `APIGEE_PROJECTS` - jaredpeterson-true-sandbox,infinite-epoch-2900.
+- `APIGEE_PROJECTS` - a comma-separated list of project IDs (no spaces)
 
 - `EMAIL_ADDR`- the email address that will get the report.
 

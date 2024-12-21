@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+TIMESTAMP=$(date '+%Y%m%d-%H%M%S')
 APPINT_SA_BASE="${EXAMPLE_NAME}-"
 APPINT_ENDPT=https://integrations.googleapis.com
 
@@ -151,17 +152,20 @@ check_integrations_and_delete() {
 }
 
 # ====================================================================
-check_shell_variables
-
-OUTFILE=$(mktemp /tmp/appint-samples.cleanup.out.XXXXXX)
+OUTFILE=$(mktemp /tmp/appint-sample.cleanup.out.XXXXXX)
 printf "\nLogging to %s\n" "$OUTFILE"
+printf "timestamp: %s\n" "$TIMESTAMP" >>"$OUTFILE"
+check_shell_variables
 
 # it is necessary to get a token... if using curl or integrationcli for anything
 TOKEN=$(gcloud auth print-access-token)
 if [[ -z "$TOKEN" ]]; then
   printf "you must have the gcloud cli on your path to use this tool.\n"
+  printf "you must have the gcloud cli on your path to use this tool.\n" >>"$OUTFILE"
   exit 1
 fi
+
+[[ -f .integration_name ]] && echo "integration name: $(<.integration_name)" >>"$OUTFILE"
 
 googleapis_whoami
 maybe_install_integrationcli
@@ -174,4 +178,4 @@ rm -f .integration_name
 rm -f .trigger_id
 rm -f .appint_sa_name
 
-printf "\n\nAll the artifacts for this sample have now been removed.\n"
+printf "\nAll the artifacts for this sample have now been removed.\n\n"

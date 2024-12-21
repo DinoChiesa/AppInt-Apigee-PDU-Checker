@@ -15,6 +15,15 @@
 
 APPINT_ENDPT=https://integrations.googleapis.com
 
+# Array of environment variable names to check
+env_vars_to_check=(
+  "APPINT_PROJECT"
+  "APIGEE_PROJECTS"
+  "REGION"
+  "EXAMPLE_NAME"
+  "EMAIL_ADDR"
+)
+
 maybe_install_integrationcli() {
   if [[ ! -d "$HOME/.apigeecli/bin" ]]; then
     echo "\nInstalling integrationcli"
@@ -53,15 +62,6 @@ googleapis_whoami() {
 
 check_shell_variables() {
   MISSING_ENV_VARS=()
-
-  # Array of environment variable names to check
-  env_vars_to_check=(
-    "APPINT_PROJECT"
-    "APIGEE_PROJECTS"
-    "REGION"
-    "EXAMPLE_NAME"
-    "EMAIL_ADDR"
-  )
   for var_name in "${env_vars_to_check[@]}"; do
     if [[ -z "${!var_name}" ]]; then
       MISSING_ENV_VARS+=("$var_name")
@@ -75,8 +75,10 @@ check_shell_variables() {
   }
 
   printf "Settings in use:\n"
+  printf "Settings in use:\n" >>"$OUTFILE"
   for var_name in "${env_vars_to_check[@]}"; do
-    printf "%s=%s\n" "$var_name" "${!var_name}"
+    printf "  %s=%s\n" "$var_name" "${!var_name}"
+    printf "  %s=%s\n" "$var_name" "${!var_name}" >>"$OUTFILE"
   done
 }
 
