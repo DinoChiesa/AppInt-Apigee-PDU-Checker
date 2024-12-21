@@ -138,12 +138,12 @@ check_integrations_and_delete() {
         tr -d ' "\t,' |
         sed -E 's@projects/[^/]+/locations/[^/]+/integrations/[^/]+/versions/@@'))
       for v in "${verarr[@]}"; do
-        printf "    version %s...\n" "$v"
+        printf "    unpublishing version %s...\n" "$v"
         echo "--------------------" >>"$OUTFILE"
         echo "integrationcli integrations versions unpublish -n $a -v $v -r $REGION -p $APPINT_PROJECT" >>"$OUTFILE"
         integrationcli integrations versions unpublish -n "$a" -v "$v" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" >>"$OUTFILE" 2>&1
       done
-      # finally, delete it
+      printf "    deleting %s...\n" "$a"
       echo "--------------------" >>"$OUTFILE"
       echo "integrationcli integrations delete -n $a -r $REGION -p $APPINT_PROJECT" >>"$OUTFILE"
       integrationcli integrations delete -n "$a" -r "$REGION" -p "$APPINT_PROJECT" -t "$TOKEN" >>"$OUTFILE" 2>&1
