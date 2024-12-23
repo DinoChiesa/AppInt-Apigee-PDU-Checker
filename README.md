@@ -12,7 +12,15 @@ a given environment or organization, but it is not possible to get PDU usage
 across environments and organizations.
 
 This tool runs in an automated fashion.
-It sends an email after tabulating results. The default schedule is nightly.
+It sends an email after tabulating results.
+
+The email looks like this:
+
+![example email](https://screenshot.googleplex.com/9Go3joz2RswhtEq.png)
+<!-- ![example email](./images/9Go3joz2RswhtEq.png) -->
+
+
+The default schedule is nightly.
 
 
 ## Pre-requisites
