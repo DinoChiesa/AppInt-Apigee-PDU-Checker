@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2024 Google LLC
+# Copyright 2024-2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,10 +25,12 @@ env_vars_to_check=(
 )
 
 maybe_install_integrationcli() {
-  if [[ ! -d "$HOME/.apigeecli/bin" ]]; then
-    echo "\nInstalling integrationcli"
-    curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
-  fi
+  # versions get updated regularly. I don't know how to check for latest.
+  # So the safest bet is to just unconditionally install.
+  #  if [[ ! -d "$HOME/.apigeecli/bin" ]]; then
+  printf "Installing latest integrationcli...\n"
+  curl --silent -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh - >>"$OUTFILE" 2>&1
+  #  fi
   export PATH=$PATH:$HOME/.integrationcli/bin
 }
 
@@ -82,6 +84,23 @@ check_shell_variables() {
   done
 }
 
+check_required_commands() {
+  local missing
+  missing=()
+  for cmd in "$@"; do
+    #printf "checking %s\n" "$cmd"
+    if ! command -v "$cmd" &>/dev/null; then
+      missing+=("$cmd")
+    fi
+  done
+  if [[ -n "$missing" ]]; then
+    printf -v joined '%s,' "${missing[@]}"
+    printf "\n\nThese commands are missing; they must be available on path: %s\nExiting.\n" "${joined%,}"
+    printf "\n\nThese commands are missing; they must be available on path: %s\nExiting.\n" "${joined%,}" >>"$OUTFILE"
+    exit 1
+  fi
+}
+
 invoke_one() {
   local url trigger_id integration_name
   if [[ -z "$1" || -z "$2" ]]; then
@@ -94,11 +113,11 @@ invoke_one() {
   url="${APPINT_ENDPT}/v1/projects/${APPINT_PROJECT}/locations/${REGION}/integrations/${integration_name}:execute"
 
   if [[ -z "$3" || "$3" != "just-show-command" ]]; then
-    printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
+    printf "curl -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
     CURL -X POST "${url}" -H 'Content-Type: application/json' -d '{  "triggerId": "'$trigger_id'" }'
     cat ${CURL_OUT}
   else
     printf "To invoke yourself:\n"
-    printf "CURL -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
+    printf "curl -X POST ${url} -H 'Content-Type: application/json' -H \"Authorization: Bearer \$TOKEN\" -d '{  \"triggerId\": \"$trigger_id\" }'\n"
   fi
 }

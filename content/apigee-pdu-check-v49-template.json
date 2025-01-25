@@ -931,6 +931,12 @@
       "task": "JavaScriptTask",
       "taskId": "38",
       "parameters": {
+        "javaScriptEngine": {
+          "key": "javaScriptEngine",
+          "value": {
+            "stringValue": "V8"
+          }
+        },
         "script": {
           "key": "script",
           "value": {

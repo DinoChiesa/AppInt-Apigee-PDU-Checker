@@ -23,6 +23,18 @@ The email looks like this:
 The default schedule is nightly.
 
 
+## Disclaimer
+
+This tool is not integrated into the billing system for Apigee. It runs in
+parallel to the official billing and metering system, following the stated
+billing recipe, but because it does not run on a minute-by-minute basis and does
+not monitor the "high water mark" of PDU usage, it does not directly align with
+what a customer will be billed.
+
+It is a tool to help estimate PDU usage. It is not a quote or a guarantee of
+measured PDU usage.
+
+
 ## Pre-requisites
 
 - a bash-like shell.
@@ -92,8 +104,8 @@ specified in the env.sh file, one option is start all over: to run the clean up
 script, modify env.sh, source it again, and re-run the setup.
 
 But there is an easier way to add a new prject: just enable the existing service
-account with apigee.readOnlyAdmin role, on the new project or projects. There's
-a script that can do _just that_:
+account with [`apigee.readOnlyAdmin` role](https://cloud.google.com/iam/docs/understanding-roles#apigee.readOnlyAdmin), on the new project or projects. There's
+a script included here that can do _just that_:
 
 ```
 ./add-apigee-project.sh project-id-of-additional-apigee-org
