@@ -31,6 +31,16 @@ echo "$INTEGRATION_NAME" >./.integration_name
 #   apigee.deployments.get
 #   apigee.deployments.list
 
+# Array of environment variable names to check
+env_vars_to_check=(
+  "APPINT_PROJECT"
+  "APIGEE_PROJECTS"
+  "REGION"
+  "EXAMPLE_NAME"
+  "EMAIL_ADDR"
+  "SCHEDULE"
+)
+
 source ./lib/utils.sh
 
 create_appint_auth_profile() {
@@ -202,6 +212,10 @@ replace_keywords_in_template() {
   sed "s/@@EMAIL_ADDR@@/${EMAIL_ADDR}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
   sed "s/@@APIGEE_PROJECTS@@/${APIGEE_PROJECTS}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
   sed "s/@@INTEGRATION_NAME@@/${INTEGRATION_NAME}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  sed "s/@@SCHEDULE@@/${SCHEDULE}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
+  #  eg, 4+21+*+*+*
+  SCHED_PLUS="${SCHEDULE// /+}"
+  sed "s/@@SCHED_PLUS@@/${SCHED_PLUS}/g" $INTEGRATION_FILE >$TMP && cp $TMP $INTEGRATION_FILE
   rm -f $TMP
 }
 
@@ -229,7 +243,7 @@ OUTFILE=$(mktemp /tmp/appint-sample.setup.out.XXXXXX)
 printf "Logging to %s\n\n" "$OUTFILE"
 
 printf "timestamp: %s\n" "$TIMESTAMP" >>"$OUTFILE"
-check_shell_variables
+check_shell_variables "${env_vars_to_check[@]}"
 check_required_commands jq curl gcloud grep sed tr
 
 printf "\nrandom seed: %s\n" "$rand_string"

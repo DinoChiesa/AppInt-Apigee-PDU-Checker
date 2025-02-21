@@ -19,13 +19,15 @@ The email looks like this:
 ![example email](https://screenshot.googleplex.com/9Go3joz2RswhtEq.png)
 <!-- ![example email](./images/9Go3joz2RswhtEq.png) -->
 
-
-The default schedule is nightly.
+The default schedule is nightly, but you can set it as you wish.
 
 
 ## Disclaimer
 
-This tool is not integrated into the billing system for Apigee. It runs in
+This example is not an official Google product, nor is it part of an
+official Google product.
+
+Also, this tool is not integrated into the billing system for Apigee. It runs in
 parallel to the official billing and metering system, following the stated
 billing recipe, but because it does not run on a minute-by-minute basis and does
 not monitor the "high water mark" of PDU usage, it does not directly align with
@@ -33,7 +35,6 @@ what a customer will be billed.
 
 It is a tool to help estimate PDU usage. It is not a quote or a guarantee of
 measured PDU usage.
-
 
 ## Pre-requisites
 
@@ -43,19 +44,45 @@ measured PDU usage.
 
 - standard unix utilities like grep, sed, and tr
 
-- You must be signed in (`gcloud auth login`) to an account that
-  has access to each of the apigee projects you want to scan.
-  The setup script will create a Service account in the
-  App Integration project, and grant rights to that SA,
-  as apigee.readOnlyAdmin on the Apigee projects.
-  So your user must have the ability to run
-  `gcloud projects add-iam-policy-binding PROJECT ...`
-  on those Apigee projects.
+- You must be signed in (`gcloud auth login`) to an account that has access to
+  each of the apigee projects you want to scan.  The setup script will create a
+  Service account in the App Integration project, and grant rights to that SA,
+  as apigee.readOnlyAdmin on the Apigee projects.  So your user must have the
+  ability to run `gcloud projects add-iam-policy-binding PROJECT ...`  on those
+  Apigee projects.
 
+## On Permissions
+
+There are Google IAM permissions required to perform the various setup steps.
+These are:
+
+  - in the Integration project, permission to create a service account. This may
+    require `roles/iam.serviceAccountAdmin` role.
+
+  - also in the Integration project, permission to grant _yourself_
+    `iam.serviceAccountUser` role on that service account. Again, this may
+    require you to have `roles/iam.serviceAccountAdmin` role in those projects.
+
+  - in each of the Apigee projects you wish to scan, the permission to grant
+    `apigee.readOnlyAdmin` role to the service account in _that other project_.
+    Your user must have `setIamPolicy` permissions in the Apigee projects you
+    want to scan. This may require you to have `roles/iam.serviceAccountAdmin`
+    role in those projects.
+
+In the above you saw this phrase repeatedly: "may require role X".  The roles
+described there will be sufficient, but if you are "Owner" or "Editor" in all of
+the various projects, then you have all the required permissions.
+
+It might be the case that a single person does not have all the permissions
+required. In that case you cannot use the automated setup script.  You will need
+to manually perform the setup, collaborating with different people who have the
+right permissions in the various projects.
 
 ## Setup
 
-Modify the env.sh file to set variables suitable for your scenario.
+Assuming you have all the required permissions, you can run the automation
+script. To do so, start by modifying the env.sh file to set variables suitable
+for your scenario.
 
 You can set:
 - `APPINT_PROJECT` - the project ID that will run the Integration. It must have integration already enabled.
@@ -68,6 +95,13 @@ You can set:
 
 - `EMAIL_ADDR`- the email address that will get the report.
 
+- `SCHEDULE` - This specifies the schedule on which the integration will
+   run. The default value of the `SCHEDULE` variable set in env.sh is "17 21 * *
+   *"; this means the integration is set to execute on a schedule, nightly at
+   21:17. You can modify this by using a different schedule. Use a
+   crontab-compliant schedule specification.  Try
+   [crontab.guru](https://crontab.guru/) to generate a spec, to set into the
+   env.sh file.
 
 Save the file.
 
@@ -131,3 +165,9 @@ The cleanup script will remove everything the setup script had set up.
 source ./env.sh
 ./clean-appint-pdu-report-sample.sh
 ```
+
+## Bugs
+
+* This README does not document the precise steps people must follow for manual
+  setup, which is necessary in the case in which a single person does not have
+  all the required permissions.

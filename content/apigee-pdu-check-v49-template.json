@@ -65,12 +65,12 @@
         }
       ],
       "properties": {
-        "Scheduled Time spec": "51 21 * * *",
+        "Scheduled Time spec": "@@SCHEDULE@@",
         "Timer Name": "@@INTEGRATION_NAME@@_Timer_1"
       },
       "triggerType": "CRON",
       "triggerNumber": "1",
-      "triggerId": "cron_trigger/@@INTEGRATION_NAME@@_Timer_1/51+21+*+*+*",
+      "triggerId": "cron_trigger/@@INTEGRATION_NAME@@_Timer_1/@@SCHED_PLUS@@",
       "position": {
         "x": 1596,
         "y": 42

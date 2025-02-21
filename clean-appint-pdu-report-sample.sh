@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2023-2024 Google LLC
+# Copyright 2023-2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,14 @@ APPINT_SA_BASE="${EXAMPLE_NAME}-"
 APPINT_ENDPT=https://integrations.googleapis.com
 
 source ./lib/utils.sh
+
+# Array of environment variable names to check
+env_vars_to_check=(
+  "APPINT_PROJECT"
+  "APIGEE_PROJECTS"
+  "REGION"
+  "EXAMPLE_NAME"
+)
 
 check_auth_configs_and_maybe_delete() {
   local urlbase array
@@ -155,7 +163,7 @@ check_integrations_and_delete() {
 OUTFILE=$(mktemp /tmp/appint-sample.cleanup.out.XXXXXX)
 printf "\nLogging to %s\n" "$OUTFILE"
 printf "timestamp: %s\n" "$TIMESTAMP" >>"$OUTFILE"
-check_shell_variables
+check_shell_variables "${env_vars_to_check[@]}"
 check_required_commands jq curl gcloud grep sed tr
 
 # it is necessary to get a token... if using curl or integrationcli for anything
