@@ -16,8 +16,8 @@ It sends an email after tabulating results.
 
 The email looks like this:
 
-![example email](https://screenshot.googleplex.com/9Go3joz2RswhtEq.png)
-<!-- ![example email](./images/9Go3joz2RswhtEq.png) -->
+<!-- ![example email](https://screenshot.googleplex.com/9Go3joz2RswhtEq.png) -->
+![example email](./images/9Go3joz2RswhtEq.png) 
 
 The default schedule is nightly, but you can set it as you wish.
 
